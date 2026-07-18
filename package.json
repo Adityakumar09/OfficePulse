@@ -12,8 +12,11 @@
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
+    "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.25.0",
     "mongoose": "^9.7.4",
     "uuid": "^14.0.1"
   }

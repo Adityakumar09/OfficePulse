@@ -74,6 +74,18 @@ app.get('/api/attendance/:userId', async (req, res) => {
   }
 });
 
+// --- NEW ROUTE: Delete a Logged Day ---
+app.delete('/api/attendance/remove', async (req, res) => {
+  try {
+    const { userId, date } = req.body;
+    await Attendance.findOneAndDelete({ userId, date });
+    res.status(200).json({ message: 'Day removed successfully' });
+  } catch (error) {
+    console.error('Error removing day:', error);
+    res.status(500).json({ error: 'Failed to remove day' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
