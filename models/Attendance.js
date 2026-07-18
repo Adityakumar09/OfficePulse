@@ -1,8 +1,13 @@
+const mongoose = require('mongoose');
+
 const attendanceSchema = new mongoose.Schema({
-  userId: { type: String, required: true }, // References User.uuid
-  date: { type: String, required: true },   // Stored as ISO string YYYY-MM-DD to avoid timezone shifts
+  userId: { type: String, required: true }, 
+  date: { type: String, required: true },   // Format: YYYY-MM-DD
   status: { type: String, enum: ['office', 'wfh', 'holiday'], default: 'office' },
-  quarterId: { type: String, required: true } // format: "2026-Q3"
+  quarterId: { type: String, required: true } // Format: e.g., "Q3-2026"
 });
-// Composite index to ensure one unique record per user per calendar date
+
+// Ensure a user can only have one record per specific calendar date
 attendanceSchema.index({ userId: 1, date: 1 }, { unique: true });
+
+module.exports = mongoose.model('Attendance', attendanceSchema);
