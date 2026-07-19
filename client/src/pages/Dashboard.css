@@ -96,7 +96,11 @@
 }
 .action-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
 .clear-btn:hover { background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.4); color: #f43f5e; }
-.copy-btn { background: linear-gradient(135deg, #a78bfa, #8b5cf6); border: none; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3); }
+
+/* NEW: Disconnect Button Hover */
+.logout-btn:hover { background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.4); color: #cbd5e1; }
+
+.copy-btn { background: linear-gradient(135deg, #a78bfa, #8b5cf6); border: none; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3); }.copy-btn { background: linear-gradient(135deg, #a78bfa, #8b5cf6); border: none; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3); }
 .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(139, 92, 246, 0.4); background: linear-gradient(135deg, #b8a1fa, #9d74f7); }
 
 .popup-toast {

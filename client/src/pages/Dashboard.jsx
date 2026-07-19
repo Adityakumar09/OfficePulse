@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isWeekend, getDay } from 'date-fns';
-import { ChevronLeft, ChevronRight, Copy, Check, Trash2, CalendarDays } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Check, Trash2, CalendarDays, LogOut } from 'lucide-react';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const { uuid } = useParams();
+  const navigate = useNavigate(); // Added for routing
   const [records, setRecords] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showToast, setShowToast] = useState(false);
@@ -60,6 +61,18 @@ export default function Dashboard() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  // NEW FEATURE: Disconnect Session
+  const handleDisconnect = () => {
+    const confirmLogout = window.confirm(
+      "⚠️ WARNING: Have you saved your Tracker URL?\n\nIf you haven't copied your URL, you will lose access to this dashboard forever. Click OK to clear your session and return to the home screen."
+    );
+    
+    if (confirmLogout) {
+      localStorage.removeItem('officeTrackerUuid'); // Wipes the local token
+      navigate('/'); // Routes back to the Landing Page
+    }
+  };
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
@@ -78,7 +91,6 @@ export default function Dashboard() {
       if (!isWeekend(d)) totalQuarterWorkdays++;
     }
 
-    // Calculate how many working days have passed UP TO TODAY
     let passedWorkdays = 0;
     const effectiveToday = today > qEnd ? qEnd : (today < qStart ? qStart : today);
     for (let d = new Date(qStart); d <= effectiveToday; d.setDate(d.getDate() + 1)) {
@@ -96,7 +108,6 @@ export default function Dashboard() {
     const wfhAllowance = totalQuarterWorkdays - mandateTarget;
     const overallCompletionPercentage = mandateTarget > 0 ? Math.min(Math.round((officeCount / mandateTarget) * 100), 100) : 0;
 
-    // PACING LOGIC
     const expectedPace = Math.ceil(passedWorkdays * 0.60);
     const daysBehindPace = expectedPace - officeCount;
 
@@ -113,7 +124,7 @@ export default function Dashboard() {
     } else if (daysBehindPace <= -1) {
       statusText = "Ahead of Pace";
       statusClass = "status-track";
-      barColor = "linear-gradient(90deg, #a78bfa, #8b5cf6)"; // Special Purple for being ahead
+      barColor = "linear-gradient(90deg, #a78bfa, #8b5cf6)"; 
       explainerText = `Great job! You are ${Math.abs(daysBehindPace)} day(s) ahead of the required pace.`;
     } else if (daysBehindPace === 1 || daysBehindPace === 2) {
       statusText = "Needs Attention";
@@ -185,6 +196,11 @@ export default function Dashboard() {
         {/* RIGHT SIDE: Friendly Stats & Controls */}
         <div className="stats-panel">
           <div className="top-bar">
+            {/* NEW BUTTON ADDED HERE */}
+            <button onClick={handleDisconnect} className="action-btn logout-btn">
+              <LogOut size={16} /> Disconnect
+            </button>
+
             <button onClick={clearCurrentMonth} className="action-btn clear-btn">
               <Trash2 size={16} /> Clear Month
             </button>
