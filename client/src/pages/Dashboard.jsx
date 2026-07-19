@@ -27,15 +27,28 @@ export default function Dashboard() {
   const toggleDay = async (date) => {
     const dateStr = format(date, 'yyyy-MM-dd');
     const isLogged = records.find(r => r.date === dateStr);
+    
+    // 1. OPTIMISTIC UPDATE: Update state immediately
+    const previousRecords = [...records];
+    if (isLogged) {
+      setRecords(records.filter(r => r.date !== dateStr));
+    } else {
+      setRecords([...records, { date: dateStr, status: 'office' }]);
+    }
+
     try {
+      // 2. BACKGROUND SYNC: Call the API
       if (isLogged) {
         await axios.delete('https://officepulse-q0mw.onrender.com/api/attendance/remove', { data: { userId: uuid, date: dateStr } });
       } else {
         await axios.post('https://officepulse-q0mw.onrender.com/api/attendance/log', { userId: uuid, date: dateStr, status: 'office' });
       }
-      fetchAttendance();
+      // fetchAttendance(); // Removed to prevent double-flicker
     } catch (error) {
+      // 3. REVERT ON ERROR: If it fails, put original state back
       console.error("Failed to toggle:", error);
+      setRecords(previousRecords);
+      alert("Sync failed. Please check your internet connection.");
     }
   };
 
