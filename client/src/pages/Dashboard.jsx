@@ -14,7 +14,7 @@ export default function Dashboard() {
 
   const fetchAttendance = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/attendance/${uuid}`);
+      const response = await axios.get(`https://officepulse-q0mw.onrender.com/api/attendance/${uuid}`);
       setRecords(response.data.records || []);
     } catch (error) {
       console.error("API Error:", error);
@@ -29,9 +29,9 @@ export default function Dashboard() {
     const isLogged = records.find(r => r.date === dateStr);
     try {
       if (isLogged) {
-        await axios.delete('http://localhost:5000/api/attendance/remove', { data: { userId: uuid, date: dateStr } });
+        await axios.delete('https://officepulse-q0mw.onrender.com/api/attendance/remove', { data: { userId: uuid, date: dateStr } });
       } else {
-        await axios.post('http://localhost:5000/api/attendance/log', { userId: uuid, date: dateStr, status: 'office' });
+        await axios.post('https://officepulse-q0mw.onrender.com/api/attendance/log', { userId: uuid, date: dateStr, status: 'office' });
       }
       fetchAttendance();
     } catch (error) {
@@ -47,7 +47,7 @@ export default function Dashboard() {
     });
     try {
       await Promise.all(currentMonthRecords.map(r => 
-        axios.delete('http://localhost:5000/api/attendance/remove', { data: { userId: uuid, date: r.date } })
+        axios.delete('https://officepulse-q0mw.onrender.com/api/attendance/remove', { data: { userId: uuid, date: r.date } })
       ));
       fetchAttendance();
     } catch (error) {

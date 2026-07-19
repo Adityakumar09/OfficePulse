@@ -36,7 +36,7 @@ export default function Landing() {
   const generateTracker = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/user/setup');
+      const response = await axios.post('https://officepulse-q0mw.onrender.com/api/user/setup');
       const newUuid = response.data.uuid;
       localStorage.setItem('officeTrackerUuid', newUuid);
       
