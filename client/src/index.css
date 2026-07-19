@@ -5,5 +5,5 @@
 }
 body {
   background-color: #0f1115;
-  overflow: hidden; /* Hard-stops any accidental scrolling */
+  /* Removed overflow: hidden so we can scroll! */
 }
